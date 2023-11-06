@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('title');
             $table->string('author');
             $table->mediumText('description')->nullable();
-            //$table->string('npm',10->unique())
             $table->timestamps();
         });
     }

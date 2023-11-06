@@ -1,69 +1,70 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Data Siswa</title>
-    <style>
-        /* Gaya CSS di sini */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 20px;
-    color: #333; /* Warna teks */
-}
+@extends('layouts.master')
+@section('title', $book->name)
 
-.info {
-    margin-bottom: 10px;
-    background-color: #fff;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+@section('content')
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between">
+                <h1 class="subheader">Data Buku</h1>
 
-h1 {
-    font-size: 24px;
-    color: #555; /* Warna judul */
-    margin-bottom: 20px;
-    text-align: center
-}
+                <a href="{{ route('books.index') }}" class="btn btn-primary btn-rounded btn-sm btn-30">Kembali</a>
+            </div>
 
-label {
-    font-weight: bold;
-}
-
-input[type="text"], input[type="number"] {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-button {
-    padding: 10px 20px;
-    background-color: #007bff; /* Warna tombol */
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-button:hover {
-    background-color: #0056b3; /* Warna tombol saat dihover */
-}     
-    </style>
-</head>
-<body>
-  <h1>Buku</h1>
-    <div class="info">
-        Judul Buku : {{ $book -> title }}
-        <br>
-        <br>
-        Penulis : {{ $book -> author }}
-        <br>
-        <br>
-        Deskripsi : {{ $book -> description  }}
+            <div class="card mt-3">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <tr>
+                            <td>Judul</td>
+                            <td><span class="font-weight-bold">{{ $book->title }}</span></td>
+                        </tr>
+                        <tr>
+                            <td>Penulis</td>
+                            <td><span class="font-weight-bold">{{ $book->author->name }}</span></td>
+                        </tr>
+                        <tr>
+                            <td>Deskripsi</td>
+                            <td><span class="font-weight-bold">{{ $book->description }}</span></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="card-footer d-flex justify-content-end gap-1">
+                    <a href="{{ route('books.edit', $book) }}" class="btn btn-warning btn-rounded btn-sm">Edit</a>
+                    <a href="#" class="btn btn-danger btn-sm btn-rounded btn-delete">Hapus</a>
+                </div>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+@endsection
+
+@section('custom_html')
+    <form action="{{ route('books.destroy', $book) }}" method="post" id="delete-form">
+        @csrf
+        @method('DELETE')
+    </form>
+@endsection
+
+@push('custom_js')
+    <script>
+        let btnDelete = document.querySelector('.btn-delete');
+        let deleteForm = document.querySelector('#delete-form');
+
+        btnDelete.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Apakah anda yakin?',
+                text: "Data yang dihapus tidak dapat dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteForm.submit();
+                }
+            })
+        });
+    </script>
+@endpush
