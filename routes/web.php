@@ -29,3 +29,7 @@ Route::get('/halaman-a', function () {
 Route::get('/halaman-b', function () {
   return view('contoh.halaman-b');
 });
+
+Route::get('/dashboard', function () {
+  return view('pbkk.dashboard');
+});
